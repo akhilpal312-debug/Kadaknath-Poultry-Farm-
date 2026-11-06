@@ -1,0 +1,151 @@
+{
+  "entities": {
+    "CustomerReview": {
+      "title": "CustomerReview",
+      "description": "Genuine customer review or farm visit testimonial submitted for Kadaknath Poultry Farm",
+      "type": "object",
+      "properties": {
+        "authorName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 60,
+          "description": "Name of the customer or farm visitor"
+        },
+        "location": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 60,
+          "description": "Village, town, or city of the reviewer"
+        },
+        "purchaseCategory": {
+          "type": "string",
+          "enum": [
+            "Kadaknath Chickens",
+            "Kadaknath Chicks",
+            "Kadaknath Eggs",
+            "Farm Visit"
+          ],
+          "description": "Product ordered or type of visit"
+        },
+        "rating": {
+          "type": "integer",
+          "description": "Customer rating from 1 to 5 stars"
+        },
+        "comment": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 450,
+          "description": "Customer review text"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "approved"
+          ],
+          "description": "Moderation status controlled by the farm owner"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the review was submitted"
+        }
+      },
+      "required": [
+        "authorName",
+        "location",
+        "purchaseCategory",
+        "rating",
+        "comment",
+        "status",
+        "createdAt"
+      ]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Verified farm owner account record for review moderation",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "maxLength": 120,
+          "description": "Verified owner email address"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "owner"
+          ],
+          "description": "Role within the farm admin panel"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when admin document was created"
+        }
+      },
+      "required": [
+        "email",
+        "role",
+        "createdAt"
+      ]
+    },
+    "FarmSettings": {
+      "title": "FarmSettings",
+      "description": "Public farm contact details managed by the owner",
+      "type": "object",
+      "properties": {
+        "phoneDisplay": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 24,
+          "description": "Formatted phone number displayed on the site"
+        },
+        "whatsappDigits": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 15,
+          "pattern": "^[0-9]+$",
+          "description": "Digits-only WhatsApp number with country code"
+        },
+        "email": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 120,
+          "description": "Public farm contact email (optional)"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of latest update"
+        }
+      },
+      "required": [
+        "phoneDisplay",
+        "whatsappDigits",
+        "email",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/reviews/{reviewId}": {
+      "schema": {
+        "$ref": "#/entities/CustomerReview"
+      },
+      "description": "Publicly submittable customer reviews moderated by the farm owner"
+    },
+    "/admins/{userId}": {
+      "schema": {
+        "$ref": "#/entities/AdminUser"
+      },
+      "description": "Owner authorization records for review moderation"
+    },
+    "/settings/{settingId}": {
+      "schema": {
+        "$ref": "#/entities/FarmSettings"
+      },
+      "description": "Public contact configuration editable by the verified owner"
+    }
+  }
+}

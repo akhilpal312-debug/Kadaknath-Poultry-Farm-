@@ -1,0 +1,197 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Reusable hardened helpers
+    function isValidId(id) {
+      return id is string &&
+        id.size() > 0 &&
+        id.size() <= 128 &&
+        id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isBootstrappedOwner() {
+      return isVerifiedUser() &&
+        request.auth.token.email == 'akhilpal1056@gmail.com';
+    }
+
+    function isAdmin() {
+      return isBootstrappedOwner() || (
+        isVerifiedUser() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // Validation blueprint matching CustomerReview in firebase-blueprint.json
+    function isValidReview(data) {
+      return data.keys().hasAll([
+          'authorName',
+          'location',
+          'purchaseCategory',
+          'rating',
+          'comment',
+          'status',
+          'createdAt'
+        ]) &&
+        data.keys().hasOnly([
+          'authorName',
+          'location',
+          'purchaseCategory',
+          'rating',
+          'comment',
+          'status',
+          'createdAt'
+        ]) &&
+        data.authorName is string &&
+        data.authorName.size() >= 2 &&
+        data.authorName.size() <= 60 &&
+        data.location is string &&
+        data.location.size() >= 2 &&
+        data.location.size() <= 60 &&
+        data.purchaseCategory in [
+          'Kadaknath Chickens',
+          'Kadaknath Chicks',
+          'Kadaknath Eggs',
+          'Farm Visit'
+        ] &&
+        data.rating is int &&
+        data.rating >= 1 &&
+        data.rating <= 5 &&
+        data.comment is string &&
+        data.comment.size() >= 10 &&
+        data.comment.size() <= 450 &&
+        data.status in ['pending', 'approved'] &&
+        data.createdAt is timestamp;
+    }
+
+    // Validation blueprint matching AdminUser in firebase-blueprint.json
+    function isValidAdminUser(data) {
+      return data.keys().hasAll(['email', 'role', 'createdAt']) &&
+        data.keys().hasOnly(['email', 'role', 'createdAt']) &&
+        data.email is string &&
+        data.email.size() >= 5 &&
+        data.email.size() <= 120 &&
+        data.role == 'owner' &&
+        data.createdAt is timestamp;
+    }
+
+    // Validation blueprint matching FarmSettings in firebase-blueprint.json
+    function isValidFarmSettings(data) {
+      return data.keys().hasAll([
+          'phoneDisplay',
+          'whatsappDigits',
+          'email',
+          'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'phoneDisplay',
+          'whatsappDigits',
+          'email',
+          'updatedAt'
+        ]) &&
+        data.phoneDisplay is string &&
+        data.phoneDisplay.size() >= 8 &&
+        data.phoneDisplay.size() <= 24 &&
+        data.whatsappDigits is string &&
+        data.whatsappDigits.size() >= 10 &&
+        data.whatsappDigits.size() <= 15 &&
+        data.whatsappDigits.matches('^[0-9]+$') &&
+        data.email is string &&
+        data.email.size() <= 120 &&
+        data.updatedAt is timestamp;
+    }
+
+    // Health check document for getDocFromServer boot verification
+    match /test/{connectionId} {
+      allow get: if isValidId(connectionId) && connectionId == 'connection';
+      allow list, write: if false;
+    }
+
+    // Customer reviews: public read of approved reviews, public creation as 'pending', owner moderation
+    match /reviews/{reviewId} {
+      allow get: if isValidId(reviewId) &&
+        (existing().status == 'approved' || isAdmin());
+      allow list: if resource.data.status == 'approved' || isBootstrappedOwner();
+      allow create: if isValidId(reviewId) &&
+        isValidReview(incoming()) &&
+        incoming().createdAt == request.time &&
+        (incoming().status == 'pending' || isAdmin());
+      allow update: if isValidId(reviewId) &&
+        isAdmin() &&
+        isValidReview(incoming()) &&
+        incoming().createdAt == existing().createdAt &&
+        (
+          incoming().diff(existing()).affectedKeys().hasOnly(['status']) ||
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'authorName',
+            'location',
+            'purchaseCategory',
+            'rating',
+            'comment',
+            'status'
+          ])
+        );
+      allow delete: if isValidId(reviewId) && isAdmin();
+    }
+
+    // Admin registry for verified owner
+    match /admins/{userId} {
+      allow get: if isValidId(userId) &&
+        isVerifiedUser() &&
+        request.auth.uid == userId &&
+        isAdmin();
+      allow list: if false;
+      allow create: if isValidId(userId) &&
+        isBootstrappedOwner() &&
+        request.auth.uid == userId &&
+        isValidAdminUser(incoming()) &&
+        incoming().email == request.auth.token.email &&
+        incoming().createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    // Public farm contact details managed by owner
+    match /settings/{settingId} {
+      allow get: if isValidId(settingId) && settingId == 'publicContact';
+      allow list: if false;
+      allow create: if isValidId(settingId) &&
+        settingId == 'publicContact' &&
+        isAdmin() &&
+        isValidFarmSettings(incoming()) &&
+        incoming().updatedAt == request.time;
+      allow update: if isValidId(settingId) &&
+        settingId == 'publicContact' &&
+        isAdmin() &&
+        isValidFarmSettings(incoming()) &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'phoneDisplay',
+          'whatsappDigits',
+          'email',
+          'updatedAt'
+        ]);
+      allow delete: if false;
+    }
+  }
+}

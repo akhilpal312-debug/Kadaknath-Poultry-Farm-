@@ -1,0 +1,8 @@
+{
+  "name": "Kadaknath Poultry Farm — Bhoshana, Shivli Road, Uttar Pradesh",
+  "description": "Heritage Kadaknath poultry farm in Bhoshana, Shivli Road, Uttar Pradesh, India. Naturally raised pure Kadaknath chickens, chicks, and nutrient-rich eggs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

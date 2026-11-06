@@ -1,0 +1,6 @@
+{
+  "summary": "Updated implementation plan to integrate verified farm phone and WhatsApp (+91 6393860760), the direct Google Maps location pin (https://goo.gl/maps/AXYQmb3qZBZhFMzj7) with an interactive map preview, and a genuine customer review submission and owner moderation workflow backed by Firebase Firestore and Google Sign-In.",
+  "updatedAt": "2026-11-06T02:48:39.213612653Z",
+  "requestFeedback": true,
+  "userFacing": true
+}
