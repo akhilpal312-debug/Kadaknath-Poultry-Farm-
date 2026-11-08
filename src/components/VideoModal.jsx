@@ -54,9 +54,9 @@ export default function VideoModal({ onClose }) {
 
         {failed ? (
           <div className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-[10px] border border-cream/15 bg-black/40 px-6 text-center">
-            <p className="font-display text-lg text-cream">The film could not be loaded</p>
+            <p className="font-display text-lg text-cream">The farm film is being prepared</p>
             <p className="max-w-sm text-[0.85rem] text-parchment/60">
-              Your browser may not support this video. Please try again, or browse the photo gallery below.
+              The video is not on the site yet. In the meantime, the gallery below has photographs of the flock.
             </p>
           </div>
         ) : (
@@ -66,7 +66,7 @@ export default function VideoModal({ onClose }) {
             muted
             playsInline
             preload="metadata"
-            poster="/images/farm-film-poster.webp"
+            poster="/images/farm-film-poster.jpg"
             onError={() => setFailed(true)}
             className="aspect-video w-full rounded-[10px] border border-cream/15 bg-black shadow-[0_30px_80px_-30px_rgba(0,0,0,.9)]"
           >

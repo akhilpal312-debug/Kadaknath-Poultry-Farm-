@@ -35,8 +35,15 @@ the farm receives it like any other chat message. There is no server to maintain
 ## Photography
 
 Photos are reference images of the Kadaknath breed from Wikimedia Commons,
-licensed CC BY-SA 4.0 and credited in the footer. Replace them with the farm's own
-photos in `public/images/` (keep the same file names) when available.
+licensed CC BY-SA 4.0 and credited in the footer. They are not photographs of
+this farm.
 
-The short film in `public/media/farm-film.mp4` is a photo montage built from the
-same images.
+`npm run build` downloads them into `public/images/` first (see
+`scripts/fetch-photos.mjs`), so the deployed site serves its own copies. To use
+the farm's real photos, drop them in `public/images/` under the same file names
+(`hero-pair.jpg`, `hen.jpg`, `chicks.jpg`, `eggs.jpg`, `rooster-portrait.jpg`,
+`rooster-head.jpg`, `hen-head.jpg`, `pair-wide.jpg`, `farm-film-poster.jpg`) —
+existing files are never overwritten by the download step.
+
+The short film in `public/media/farm-film.mp4` is not part of the repository yet;
+until it is added, the video dialog shows the poster image and a short notice.

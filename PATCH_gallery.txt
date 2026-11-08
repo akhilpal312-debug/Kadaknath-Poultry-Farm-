@@ -1,6 +1,0 @@
-  { src: '/images/rooster-head.jpg', alt: 'Extreme close-up of a Kadaknath rooster’s eye and black plumage', caption: 'The rooster', tag: 'Roosters' },
-  { src: '/images/hen.jpg', alt: 'Black Kadaknath hen standing in the farm run', caption: 'A healthy hen', tag: 'Hens' },
-  { src: '/images/chicks.jpg', alt: 'Young chicks in a brooder tray at the farm', caption: 'This season’s chicks', tag: 'Chicks' },
-  { src: '/images/eggs.jpg', alt: 'Basket of speckled farm eggs on straw', caption: 'Morning collection', tag: 'Eggs' },
-  { src: '/images/pair-wide.jpg', alt: 'Kadaknath hens in the farm pen, with a freshly laid egg on the bedding', caption: 'Hens at the nest', tag: 'Farm' },
-  { src: '/images/hen-head.jpg', alt: 'Front view of a Kadaknath rooster showing its comb and wattles', caption: 'Full plumage', tag: 'Roosters' },
