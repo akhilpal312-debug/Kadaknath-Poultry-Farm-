@@ -95,7 +95,7 @@ export const products = [
     kicker: 'Strong & Healthy Birds',
     text: 'Live, naturally reared Kadaknath birds with the breed’s signature black plumage and rich, dark meat.',
     price: 'Price on enquiry',
-    image: '/images/hen.webp',
+    image: '/images/hen.jpg',
     alt: 'A pure black Kadaknath hen standing on the ground at the farm',
     enquiry: 'Kadaknath chickens',
   },
@@ -105,7 +105,7 @@ export const products = [
     kicker: 'Healthy Chicks for a Better Tomorrow',
     text: 'Vigorous young chicks from our own hatch, ready to settle into your brooder or backyard coop.',
     price: 'Price on enquiry',
-    image: '/images/chicks.webp',
+    image: '/images/chicks.jpg',
     alt: 'Young chicks grouped in a clean brooder tray',
     enquiry: 'Kadaknath chicks',
   },
@@ -115,19 +115,19 @@ export const products = [
     kicker: 'Nutritious & Protein Rich',
     text: 'Farm-fresh eggs collected daily — for the table, or for hatching your own Kadaknath flock.',
     price: 'Price on enquiry',
-    image: '/images/eggs.webp',
+    image: '/images/eggs.jpg',
     alt: 'A woven basket filled with fresh farm eggs resting on straw',
     enquiry: 'Kadaknath eggs',
   },
 ]
 
 export const gallery = [
-  { src: '/images/rooster-head.webp', alt: 'Close portrait of a Kadaknath rooster’s head and comb', caption: 'The rooster', tag: 'Roosters' },
-  { src: '/images/hen.webp', alt: 'Black Kadaknath hen standing in the farm run', caption: 'A healthy hen', tag: 'Hens' },
-  { src: '/images/chicks.webp', alt: 'Young chicks in a brooder tray at the farm', caption: 'This season’s chicks', tag: 'Chicks' },
-  { src: '/images/eggs.webp', alt: 'Basket of speckled farm eggs on straw', caption: 'Morning collection', tag: 'Eggs' },
-  { src: '/images/pair-wide.webp', alt: 'Kadaknath rooster and hen together with woven baskets', caption: 'Cock and hen', tag: 'Farm' },
-  { src: '/images/hen-head.webp', alt: 'Front view of a Kadaknath rooster showing its comb and wattles', caption: 'Full plumage', tag: 'Roosters' },
+  { src: '/images/rooster-head.jpg', alt: 'Extreme close-up of a Kadaknath rooster’s eye and black plumage', caption: 'The rooster', tag: 'Roosters' },
+  { src: '/images/hen.jpg', alt: 'Black Kadaknath hen standing in the farm run', caption: 'A healthy hen', tag: 'Hens' },
+  { src: '/images/chicks.jpg', alt: 'Young chicks in a brooder tray at the farm', caption: 'This season’s chicks', tag: 'Chicks' },
+  { src: '/images/eggs.jpg', alt: 'Basket of speckled farm eggs on straw', caption: 'Morning collection', tag: 'Eggs' },
+  { src: '/images/pair-wide.jpg', alt: 'Kadaknath hens in the farm pen, with a freshly laid egg on the bedding', caption: 'Hens at the nest', tag: 'Farm' },
+  { src: '/images/hen-head.jpg', alt: 'Front view of a Kadaknath rooster showing its comb and wattles', caption: 'Full plumage', tag: 'Roosters' },
 ]
 
 /**
