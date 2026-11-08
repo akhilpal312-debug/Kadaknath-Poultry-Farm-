@@ -136,10 +136,10 @@ export default function Hero({ onWatch }) {
               <div className="absolute -inset-5 rounded-[34px] border border-gold/15 sm:-inset-7" />
               <div className="relative overflow-hidden rounded-[22px] bg-parchment-deep shadow-[0_40px_80px_-40px_rgba(48,32,10,.75)]">
                 <img
-                  src="/images/hero-pair.webp"
+                  src="/images/hero-pair.jpg"
                   alt="A Kadaknath rooster and hen standing together at the farm, with a young chick nearby"
-                  width="1300"
-                  height="1346"
+                  width="1280"
+                  height="1055"
                   fetchPriority="high"
                   decoding="async"
                   className="h-[360px] w-full object-cover object-center sm:h-[460px] lg:h-[540px] xl:h-[580px]"
@@ -163,8 +163,7 @@ export default function Hero({ onWatch }) {
             </motion.div>
 
             {/* premium badge */}
-            <motion.div
-              initial={reduce ? false : { opacity: 0, scale: 0.85, rotate: -8 }}
+            <motion.div                initial={reduce ? false : { opacity: 0, scale: 0.85, rotate: -8 }}
               animate={{ opacity: 1, scale: 1, rotate: -3 }}
               transition={{ duration: 0.9, delay: 0.85, ease }}
               className="absolute -left-2 -top-4 z-20 w-[126px] sm:-left-7 sm:-top-7 sm:w-[150px]"
