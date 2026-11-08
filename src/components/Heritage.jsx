@@ -56,14 +56,13 @@ export default function Heritage() {
             </p>
           </Reveal>
 
-          <Reveal delay={0.3}>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <a href="#about" className="btn btn-gold group">
-                Know More
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.8} />
-              </a>
-              <span className="hidden h-px w-24 bg-gradient-to-r from-gold-soft/50 to-transparent sm:block" />
-            </div>
+          <Reveal delay={0.3}>              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <a href="#about" className="btn btn-gold group">
+                  Know More
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" strokeWidth={1.8} />
+                </a>
+                <span className="hidden h-px w-24 bg-gradient-to-r from-gold-soft/50 to-transparent sm:block" />
+              </div>
           </Reveal>
         </div>
 
@@ -73,10 +72,10 @@ export default function Heritage() {
             <div className="absolute -inset-2.5 rounded-[10px] border border-gold/35" aria-hidden="true" />
             <div className="relative overflow-hidden rounded-[8px] bg-forest shadow-[0_30px_70px_-30px_rgba(0,0,0,.85)]">
               <img
-                src="/images/rooster-portrait.webp"
+                src="/images/rooster-portrait.jpg"
                 alt="Portrait of a Kadaknath rooster showing its dark comb, black plumage and deep red wattle"
-                width="1500"
-                height="1500"
+                width="1280"
+                height="1478"
                 loading="lazy"
                 decoding="async"
                 className="aspect-[4/5] w-full object-cover object-center"
