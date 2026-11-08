@@ -33,10 +33,10 @@ export default function About() {
               <div className="absolute -inset-1.5 rotate-[1.2deg] rounded-[12px] border border-gold/25 bg-cream" />
               <figure className="relative overflow-hidden rounded-[10px] border border-ink/10 bg-cream shadow-[0_30px_60px_-38px_rgba(48,32,10,.7)]">
                 <img
-                  src="/images/hen.webp"
+                  src="/images/hen.jpg"
                   alt="A pure black Kadaknath hen standing in the farm run at Bhoshana"
-                  width="1200"
-                  height="900"
+                  width="1280"
+                  height="960"
                   loading="lazy"
                   decoding="async"
                   className="h-[280px] w-full object-cover sm:h-[360px] lg:h-[400px]"
