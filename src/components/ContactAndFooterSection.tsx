@@ -16,9 +16,16 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from 'firebase/firestore';
 import {
   DEFAULT_FARM_CONTACT,
+  ENQUIRY_FIELD_LIMITS,
   FARM_COORDINATES,
   FARM_IMAGES,
   FarmContactConfig,
@@ -58,6 +65,7 @@ export const ContactAndFooterSection: React.FC<
     mobile: string;
     message: string;
   } | null>(null);
+  const [submittingEnquiry, setSubmittingEnquiry] = useState(false);
 
   // Interactive Map Preview State
   const [mapZoom, setMapZoom] = useState<number>(1);
@@ -80,32 +88,60 @@ export const ContactAndFooterSection: React.FC<
 
   const isOwner = isOwnerUser(currentUser);
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const nextErrors: typeof errors = {};
-    const cleanedDigits = mobile.replace(/\D/g, '');
+    const trimmedName = name.trim();
+    const trimmedMobile = mobile.trim();
+    const trimmedMessage = message.trim();
+    const cleanedDigits = trimmedMobile.replace(/\D/g, '');
 
-    if (name.trim().length < 2) {
-      nextErrors.name = 'Please enter your full name.';
+    if (
+      trimmedName.length < ENQUIRY_FIELD_LIMITS.nameMin ||
+      trimmedName.length > ENQUIRY_FIELD_LIMITS.nameMax
+    ) {
+      nextErrors.name = `Please enter your full name (${ENQUIRY_FIELD_LIMITS.nameMin}–${ENQUIRY_FIELD_LIMITS.nameMax} characters).`;
     }
-    if (cleanedDigits.length < 10) {
+    if (
+      cleanedDigits.length < 10 ||
+      trimmedMobile.length > ENQUIRY_FIELD_LIMITS.mobileMax
+    ) {
       nextErrors.mobile = 'Please enter a valid 10-digit mobile number.';
     }
-    if (message.trim().length < 5) {
-      nextErrors.message = 'Please enter a brief enquiry message.';
+    if (
+      trimmedMessage.length < ENQUIRY_FIELD_LIMITS.messageMin ||
+      trimmedMessage.length > ENQUIRY_FIELD_LIMITS.messageMax
+    ) {
+      nextErrors.message = `Please enter an enquiry message (${ENQUIRY_FIELD_LIMITS.messageMin}–${ENQUIRY_FIELD_LIMITS.messageMax} characters).`;
     }
 
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
-    setSubmittedData({
-      name: name.trim(),
-      mobile: mobile.trim(),
-      message: message.trim(),
-    });
-    setName('');
-    setMobile('');
-    setMessage('');
+    setSubmittingEnquiry(true);
+    try {
+      await addDoc(collection(db, 'enquiries'), {
+        name: trimmedName,
+        mobile: trimmedMobile,
+        message: trimmedMessage,
+        status: 'new',
+        createdAt: serverTimestamp(),
+      });
+
+      setSubmittedData({
+        name: trimmedName,
+        mobile: trimmedMobile,
+        message: trimmedMessage,
+      });
+      setName('');
+      setMobile('');
+      setMessage('');
+    } catch (error) {
+      setSubmittingEnquiry(false);
+      handleFirestoreError(error, OperationType.CREATE, 'enquiries');
+    } finally {
+      setSubmittingEnquiry(false);
+    }
   };
 
   const handleSaveContact = async (e: React.FormEvent) => {
@@ -123,12 +159,16 @@ export const ContactAndFooterSection: React.FC<
     const normalizedWa =
       digits.length === 10
         ? `91${digits}`
-        : digits.length >= 11
+        : digits.length >= 11 && digits.length <= 15
         ? digits
         : contact.whatsappDigits;
 
-    const cleanPhone = draftPhone.trim() || DEFAULT_FARM_CONTACT.phoneDisplay;
-    const cleanEmail = draftEmail.trim();
+    const rawPhone = draftPhone.trim();
+    const cleanPhone =
+      rawPhone.length >= 8 && rawPhone.length <= 24
+        ? rawPhone
+        : DEFAULT_FARM_CONTACT.phoneDisplay;
+    const cleanEmail = draftEmail.trim().slice(0, 120);
 
     setSavingSettings(true);
     try {
@@ -186,7 +226,7 @@ export const ContactAndFooterSection: React.FC<
       {/* Section I: Contact Us Band */}
       <section
         id="contact"
-        className="relative bg-gradient-to-b from-[#1A3720] via-[#152D1A] to-[#102314] text-[#FAF3E3] py-14 sm:py-20 overflow-hidden"
+        className="relative bg-gradient-to-b from-[#1A3720] via-[#152D1A] to-[#102314] text-[#FAF3E3] py-14 sm:py-20 overflow-hidden scroll-mt-20"
       >
         <div className="max-w-[1220px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -565,11 +605,12 @@ export const ContactAndFooterSection: React.FC<
                       <CheckCircle2 className="w-5 h-5 text-[#1B3B22] shrink-0 mt-0.5" />
                       <div>
                         <p className="text-sm font-bold text-[#1B3B22]">
-                          Enquiry Prepared for {submittedData.name}
+                          Enquiry Saved for {submittedData.name}
                         </p>
                         <p className="text-xs text-[#3F493F] mt-1 leading-relaxed">
-                          Your message is ready to send directly to our
-                          Bhoshana farm WhatsApp ({contact.phoneDisplay}).
+                          Your message has been logged for our Bhoshana farm
+                          owner and is ready for instant WhatsApp dispatch (
+                          {contact.phoneDisplay}).
                         </p>
                       </div>
                     </div>
@@ -604,6 +645,7 @@ export const ContactAndFooterSection: React.FC<
                       <input
                         id="contact-name"
                         type="text"
+                        maxLength={ENQUIRY_FIELD_LIMITS.nameMax}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Your Name"
@@ -623,6 +665,7 @@ export const ContactAndFooterSection: React.FC<
                       <input
                         id="contact-mobile"
                         type="tel"
+                        maxLength={ENQUIRY_FIELD_LIMITS.mobileMax}
                         value={mobile}
                         onChange={(e) => setMobile(e.target.value)}
                         placeholder="Your Mobile Number"
@@ -642,6 +685,7 @@ export const ContactAndFooterSection: React.FC<
                       <textarea
                         id="contact-message"
                         rows={3}
+                        maxLength={ENQUIRY_FIELD_LIMITS.messageMax}
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         placeholder="Your Message (e.g. enquiry for Kadaknath birds, chicks, or eggs)..."
@@ -656,9 +700,12 @@ export const ContactAndFooterSection: React.FC<
 
                     <button
                       type="submit"
-                      className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-5 rounded-full bg-[#1B3B22] hover:bg-[#132B18] active:scale-[0.98] text-[#FAF3E3] text-sm font-semibold shadow-sm transition-all duration-150 cursor-pointer min-h-[44px]"
+                      disabled={submittingEnquiry}
+                      className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-5 rounded-full bg-[#1B3B22] hover:bg-[#132B18] disabled:opacity-60 active:scale-[0.98] text-[#FAF3E3] text-sm font-semibold shadow-sm transition-all duration-150 cursor-pointer min-h-[44px]"
                     >
-                      <span>Send Message</span>
+                      <span>
+                        {submittingEnquiry ? 'Sending...' : 'Send Message'}
+                      </span>
                       <ArrowRight className="w-4 h-4 text-[#DFB75E]" />
                     </button>
                   </form>
@@ -713,7 +760,7 @@ export const ContactAndFooterSection: React.FC<
                   { label: 'About Us', id: 'about' },
                   { label: 'Our Products', id: 'products' },
                   { label: 'Gallery', id: 'gallery' },
-                  { label: 'Customer Reviews', id: 'reviews' },
+                  { label: 'Customer Feedback', id: 'reviews' },
                   { label: 'Contact Us', id: 'contact' },
                 ].map((link, idx, arr) => (
                   <React.Fragment key={link.id}>

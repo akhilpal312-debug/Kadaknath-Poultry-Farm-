@@ -52,6 +52,11 @@ service cloud.firestore {
           'rating',
           'comment',
           'status',
+          'helpfulCount',
+          'authorUid',
+          'verifiedAccount',
+          'ownerReply',
+          'ownerRepliedAt',
           'createdAt'
         ]) &&
         data.keys().hasOnly([
@@ -61,6 +66,11 @@ service cloud.firestore {
           'rating',
           'comment',
           'status',
+          'helpfulCount',
+          'authorUid',
+          'verifiedAccount',
+          'ownerReply',
+          'ownerRepliedAt',
           'createdAt'
         ]) &&
         data.authorName is string &&
@@ -80,8 +90,46 @@ service cloud.firestore {
         data.rating <= 5 &&
         data.comment is string &&
         data.comment.size() >= 10 &&
-        data.comment.size() <= 450 &&
-        data.status in ['pending', 'approved'] &&
+        data.comment.size() <= 500 &&
+        data.status in ['published', 'hidden'] &&
+        data.helpfulCount is int &&
+        data.helpfulCount >= 0 &&
+        data.helpfulCount <= 100000 &&
+        data.authorUid is string &&
+        data.authorUid.size() <= 128 &&
+        data.verifiedAccount is bool &&
+        data.ownerReply is string &&
+        data.ownerReply.size() <= 400 &&
+        (data.ownerRepliedAt == null || data.ownerRepliedAt is timestamp) &&
+        data.createdAt is timestamp;
+    }
+
+    // Validation blueprint matching CustomerEnquiry in firebase-blueprint.json
+    function isValidEnquiry(data) {
+      return data.keys().hasAll([
+          'name',
+          'mobile',
+          'message',
+          'status',
+          'createdAt'
+        ]) &&
+        data.keys().hasOnly([
+          'name',
+          'mobile',
+          'message',
+          'status',
+          'createdAt'
+        ]) &&
+        data.name is string &&
+        data.name.size() >= 2 &&
+        data.name.size() <= 60 &&
+        data.mobile is string &&
+        data.mobile.size() >= 10 &&
+        data.mobile.size() <= 20 &&
+        data.message is string &&
+        data.message.size() >= 5 &&
+        data.message.size() <= 500 &&
+        data.status in ['new', 'contacted'] &&
         data.createdAt is timestamp;
     }
 
@@ -128,31 +176,119 @@ service cloud.firestore {
       allow list, write: if false;
     }
 
-    // Customer reviews: public read of approved reviews, public creation as 'pending', owner moderation
+    // Customer feedback: live publishing, verified Google author edit/delete, helpful votes, owner replies
     match /reviews/{reviewId} {
-      allow get: if isValidId(reviewId) &&
-        (existing().status == 'approved' || isAdmin());
-      allow list: if resource.data.status == 'approved' || isBootstrappedOwner();
+      allow get: if isValidId(reviewId) && (
+        existing().status == 'published' ||
+        isAdmin() ||
+        (isVerifiedUser() && existing().authorUid != '' && existing().authorUid == request.auth.uid)
+      );
+      allow list: if resource.data.status == 'published' || isBootstrappedOwner();
       allow create: if isValidId(reviewId) &&
         isValidReview(incoming()) &&
         incoming().createdAt == request.time &&
-        (incoming().status == 'pending' || isAdmin());
+        incoming().helpfulCount == 0 &&
+        (
+          isAdmin() ||
+          (
+            incoming().status == 'published' &&
+            incoming().ownerReply == '' &&
+            incoming().ownerRepliedAt == null &&
+            (
+              (
+                isVerifiedUser() &&
+                incoming().authorUid == request.auth.uid &&
+                incoming().verifiedAccount == true
+              ) ||
+              (
+                !isSignedIn() &&
+                incoming().authorUid == '' &&
+                incoming().verifiedAccount == false
+              )
+            )
+          )
+        );
       allow update: if isValidId(reviewId) &&
-        isAdmin() &&
         isValidReview(incoming()) &&
         incoming().createdAt == existing().createdAt &&
         (
-          incoming().diff(existing()).affectedKeys().hasOnly(['status']) ||
-          incoming().diff(existing()).affectedKeys().hasOnly([
-            'authorName',
-            'location',
-            'purchaseCategory',
-            'rating',
-            'comment',
-            'status'
-          ])
+          (
+            isAdmin() &&
+            (
+              (
+                incoming().diff(existing()).affectedKeys().hasOnly([
+                  'ownerReply',
+                  'ownerRepliedAt'
+                ]) &&
+                (
+                  (incoming().ownerReply.size() > 0 && incoming().ownerRepliedAt == request.time) ||
+                  (incoming().ownerReply == '' && incoming().ownerRepliedAt == null)
+                )
+              ) ||
+              incoming().diff(existing()).affectedKeys().hasOnly(['status']) ||
+              incoming().diff(existing()).affectedKeys().hasOnly([
+                'authorName',
+                'location',
+                'purchaseCategory',
+                'rating',
+                'comment',
+                'status',
+                'helpfulCount',
+                'authorUid',
+                'verifiedAccount',
+                'ownerReply',
+                'ownerRepliedAt'
+              ])
+            )
+          ) ||
+          (
+            incoming().authorUid == existing().authorUid &&
+            incoming().verifiedAccount == existing().verifiedAccount &&
+            (
+              (
+                isVerifiedUser() &&
+                existing().authorUid != '' &&
+                existing().authorUid == request.auth.uid &&
+                incoming().diff(existing()).affectedKeys().hasOnly([
+                  'authorName',
+                  'location',
+                  'purchaseCategory',
+                  'rating',
+                  'comment'
+                ])
+              ) ||
+              (
+                existing().status == 'published' &&
+                incoming().diff(existing()).affectedKeys().hasOnly(['helpfulCount']) &&
+                incoming().helpfulCount == existing().helpfulCount + 1
+              )
+            )
+          )
         );
-      allow delete: if isValidId(reviewId) && isAdmin();
+      allow delete: if isValidId(reviewId) && (
+        isAdmin() ||
+        (
+          isVerifiedUser() &&
+          existing().authorUid != '' &&
+          existing().authorUid == request.auth.uid
+        )
+      );
+    }
+
+    // Customer enquiries (contains PII mobile numbers -> strict owner-only read)
+    match /enquiries/{enquiryId} {
+      allow get: if isValidId(enquiryId) && isAdmin();
+      allow list: if isBootstrappedOwner();
+      allow create: if isValidId(enquiryId) &&
+        isValidEnquiry(incoming()) &&
+        incoming().status == 'new' &&
+        incoming().createdAt == request.time;
+      allow update: if isValidId(enquiryId) &&
+        isAdmin() &&
+        isValidEnquiry(incoming()) &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().diff(existing()).affectedKeys().hasOnly(['status']);
+      allow delete: if isValidId(enquiryId) && isAdmin();
     }
 
     // Admin registry for verified owner

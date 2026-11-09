@@ -59,9 +59,42 @@ export interface CustomerReview {
   purchaseCategory: ReviewPurchaseCategory;
   rating: number;
   comment: string;
-  status: 'pending' | 'approved';
+  status: 'published' | 'hidden';
+  helpfulCount: number;
+  authorUid: string;
+  verifiedAccount: boolean;
+  ownerReply: string;
+  ownerRepliedAt?: Date | null;
   createdAt?: Date | null;
 }
+
+export interface CustomerEnquiry {
+  id: string;
+  name: string;
+  mobile: string;
+  message: string;
+  status: 'new' | 'contacted';
+  createdAt?: Date | null;
+}
+
+export const REVIEW_FIELD_LIMITS = {
+  authorNameMin: 2,
+  authorNameMax: 60,
+  locationMin: 2,
+  locationMax: 60,
+  commentMin: 10,
+  commentMax: 500,
+  ownerReplyMax: 400,
+} as const;
+
+export const ENQUIRY_FIELD_LIMITS = {
+  nameMin: 2,
+  nameMax: 60,
+  mobileMin: 10,
+  mobileMax: 20,
+  messageMin: 5,
+  messageMax: 500,
+} as const;
 
 export const FARM_IMAGES = {
   heroFlock: heroFlockImg,

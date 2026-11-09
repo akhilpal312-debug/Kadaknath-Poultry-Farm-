@@ -12,6 +12,7 @@ import { HeroSection } from './components/HeroSection';
 import { AboutAndWhySection } from './components/AboutAndWhySection';
 import { ProductsAndBannerSection } from './components/ProductsAndBannerSection';
 import { GalleryAndTestimonialsSection } from './components/GalleryAndTestimonialsSection';
+import { CustomerFeedbackSection } from './components/CustomerFeedbackSection';
 import { ContactAndFooterSection } from './components/ContactAndFooterSection';
 import { WhatsAppEnquiryDrawer } from './components/WhatsAppEnquiryDrawer';
 import { FarmDioramaModal } from './components/FarmDioramaModal';
@@ -78,6 +79,7 @@ export function App() {
       'why-us',
       'products',
       'gallery',
+      'reviews',
       'contact',
     ];
     const observer = new IntersectionObserver(
@@ -140,6 +142,8 @@ export function App() {
           />
 
           <GalleryAndTestimonialsSection />
+
+          <CustomerFeedbackSection contact={contact} />
 
           <ContactAndFooterSection
             contact={contact}

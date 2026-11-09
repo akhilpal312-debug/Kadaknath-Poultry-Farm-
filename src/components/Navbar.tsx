@@ -77,7 +77,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Zone 2: Concise Single-Line Navigation Links */}
         <nav
           aria-label="Primary Navigation"
-          className="hidden lg:flex items-center gap-6 text-sm font-medium text-[#2A332A]"
+          className="hidden lg:flex items-center lg:gap-4 xl:gap-6 text-sm font-medium text-[#2A332A]"
         >
           <a
             href="#home"
@@ -214,6 +214,21 @@ export const Navbar: React.FC<NavbarProps> = ({
           </a>
 
           <a
+            href="#reviews"
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavClick('#reviews');
+            }}
+            className={`py-1 border-b-2 transition-colors whitespace-nowrap shrink-0 ${
+              activeSection === 'reviews'
+                ? 'border-[#1B3B22] text-[#1B3B22] font-semibold'
+                : 'border-transparent hover:border-[#C89B3C] hover:text-[#1B3B22]'
+            }`}
+          >
+            Feedback
+          </a>
+
+          <a
             href="#contact"
             onClick={(e) => {
               e.preventDefault();
@@ -265,6 +280,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               { label: 'Our Products', href: '#products' },
               { label: 'Gallery', href: '#gallery' },
               { label: 'Why Choose Us', href: '#why-us' },
+              { label: 'Customer Feedback', href: '#reviews' },
               { label: 'Contact Us', href: '#contact' },
             ].map((item) => (
               <a

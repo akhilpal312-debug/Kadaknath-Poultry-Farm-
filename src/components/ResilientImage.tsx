@@ -14,7 +14,7 @@ export const ResilientImage: React.FC<ResilientImageProps> = ({
   fallbackTitle,
   className = '',
   containerClassName = '',
-  loading = 'lazy',
+  loading = 'eager',
   ...rest
 }) => {
   const [hasError, setHasError] = useState(false);
