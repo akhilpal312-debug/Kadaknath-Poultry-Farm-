@@ -8,11 +8,12 @@ import WhyChooseUs from './components/WhyChooseUs'
 import Products from './components/Products'
 import Heritage from './components/Heritage'
 import Gallery from './components/Gallery'
-import Testimonials from './components/Testimonials'
+import Reviews from './components/Reviews'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import WhatsAppFab from './components/WhatsAppFab'
 import VideoModal from './components/VideoModal'
+import ScrollProgress from './components/ui/ScrollProgress'
 
 export default function App() {
   const [loading, setLoading] = useState(true)
@@ -32,6 +33,7 @@ export default function App() {
 
       <AnimatePresence>{loading && <Loader key="loader" onDone={finishLoading} />}</AnimatePresence>
 
+      <ScrollProgress />
       <Navbar />
 
       <main>
@@ -41,7 +43,7 @@ export default function App() {
         <Products />
         <Heritage />
         <Gallery />
-        <Testimonials />
+        <Reviews />
         <Contact />
       </main>
 

@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { ArrowRight, MapPin, Feather, Sprout } from 'lucide-react'
 import { Reveal, SectionHeading, Stagger, StaggerItem } from './ui/Primitives'
 import { Branch, Sprig } from './ui/Botanical'
@@ -9,6 +9,12 @@ const ease = [0.22, 1, 0.36, 1]
 export default function About() {
   const [expanded, setExpanded] = useState(false)
   const reduce = useReducedMotion()
+  const photoTrack = useRef(null)
+  const { scrollYProgress: photoProgress } = useScroll({
+    target: photoTrack,
+    offset: ['start end', 'end start'],
+  })
+  const photoY = useTransform(photoProgress, [0, 1], [18, reduce ? 18 : -18])
 
   return (
     <section id="about" className="relative scroll-mt-24 overflow-hidden bg-cream-soft py-16 sm:py-20 lg:py-24">
@@ -16,7 +22,10 @@ export default function About() {
         className="pointer-events-none absolute inset-0"
         style={{ background: 'radial-gradient(60% 50% at 15% 0%, rgba(255,255,252,.9), transparent 60%)' }}
       />
-      <Branch className="pointer-events-none absolute -right-16 top-6 h-52 w-auto rotate-12 text-forest/12 sm:h-64" flip />
+      <Branch
+        className="pointer-events-none absolute -right-16 top-6 h-52 w-auto rotate-12 text-forest/12 [animation:branch-sway_15s_ease-in-out_infinite] sm:h-64"
+        flip
+      />
 
       <div className="relative mx-auto max-w-[1240px] px-5 sm:px-8">
         <SectionHeading
@@ -27,37 +36,39 @@ export default function About() {
 
         <div className="mt-12 grid items-center gap-10 lg:mt-16 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
           {/* ── Photo ── */}
-          <Reveal y={36} className="relative mx-auto w-full max-w-[540px]">
-            <div className="relative">
-              <div className="absolute -inset-3 rotate-[-2.2deg] rounded-[14px] bg-parchment-deep/70" />
-              <div className="absolute -inset-1.5 rotate-[1.2deg] rounded-[12px] border border-gold/25 bg-cream" />
-              <figure className="relative overflow-hidden rounded-[10px] border border-ink/10 bg-cream shadow-[0_30px_60px_-38px_rgba(48,32,10,.7)]">
-                <img
-                  src="/images/hen.jpg"
-                  alt="A pure black Kadaknath hen standing in the farm run at Bhoshana"
-                  width="1280"
-                  height="960"
-                  loading="lazy"
-                  decoding="async"
-                  className="h-[280px] w-full object-cover sm:h-[360px] lg:h-[400px]"
-                />
-                <figcaption className="flex items-center justify-between gap-3 px-5 py-4">
-                  <span className="font-serif text-[0.95rem] italic text-ink-soft">Kadaknath hen · our flock</span>
-                  <span className="flex items-center gap-1.5 text-[0.68rem] tracking-wide text-clay">
-                    <Feather className="h-3.5 w-3.5" strokeWidth={1.6} /> Pure breed
-                  </span>
-                </figcaption>
-              </figure>
+          <div ref={photoTrack} className="relative mx-auto w-full max-w-[540px]">
+            <Reveal y={36}>
+              <motion.div style={{ y: photoY }} className="relative">
+                <div className="absolute -inset-3 rotate-[-2.2deg] rounded-[14px] bg-parchment-deep/70" />
+                <div className="absolute -inset-1.5 rotate-[1.2deg] rounded-[12px] border border-gold/25 bg-cream" />
+                <figure className="relative overflow-hidden rounded-[10px] border border-ink/10 bg-cream shadow-[0_30px_60px_-38px_rgba(48,32,10,.7)]">
+                  <img
+                    src="/images/hen.jpg"
+                    alt="A pure black Kadaknath hen standing in the farm run at Bhoshana"
+                    width="1280"
+                    height="960"
+                    loading="lazy"
+                    decoding="async"
+                    className="h-[280px] w-full object-cover sm:h-[360px] lg:h-[400px]"
+                  />
+                  <figcaption className="flex items-center justify-between gap-3 px-5 py-4">
+                    <span className="font-serif text-[0.95rem] italic text-ink-soft">Kadaknath hen · our flock</span>
+                    <span className="flex items-center gap-1.5 text-[0.68rem] tracking-wide text-clay">
+                      <Feather className="h-3.5 w-3.5" strokeWidth={1.6} /> Pure breed
+                    </span>
+                  </figcaption>
+                </figure>
 
-              <motion.div
-                animate={reduce ? undefined : { rotate: [-1.5, 1.5, -1.5] }}
-                transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -bottom-6 -left-3 hidden text-gold/50 sm:block"
-              >
-                <Sprig className="h-5 w-20" />
+                <motion.div
+                  animate={reduce ? undefined : { rotate: [-1.5, 1.5, -1.5] }}
+                  transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+                  className="absolute -bottom-6 -left-3 hidden text-gold/50 sm:block"
+                >
+                  <Sprig className="h-5 w-20" />
+                </motion.div>
               </motion.div>
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
 
           {/* ── Copy ── */}
           <div className="relative">

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, motion, useMotionValueEvent, useReducedMotion, useScroll } from 'framer-motion'
 import { Menu, X, Phone } from 'lucide-react'
 import RoosterMark from './ui/RoosterMark'
 import WhatsAppIcon from './ui/WhatsAppIcon'
@@ -12,7 +12,15 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('#home')
+  const [tucked, setTucked] = useState(false)
   const reduce = useReducedMotion()
+  const { scrollY } = useScroll()
+
+  // Glide the bar away as the reader moves down, bring it back on the way up.
+  useMotionValueEvent(scrollY, 'change', (y) => {
+    const previous = scrollY.getPrevious() ?? 0
+    setTucked(y > 180 && y > previous)
+  })
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -53,8 +61,10 @@ export default function Navbar() {
 
   return (
     <>
-      <header
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+      <motion.header
+        animate={{ y: tucked && !open ? '-105%' : '0%' }}
+        transition={reduce ? { duration: 0 } : { duration: 0.55, ease }}
+        className={`fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${
           scrolled
             ? 'bg-cream-soft/92 shadow-[0_10px_30px_-24px_rgba(60,42,16,.7)] backdrop-blur-md'
             : 'bg-transparent'
@@ -130,7 +140,7 @@ export default function Navbar() {
             </button>
           </div>
         </nav>
-      </header>
+      </motion.header>
 
       {/* Mobile menu */}
       <AnimatePresence>

@@ -23,7 +23,7 @@ Everything editable lives in **`src/data/site.js`**:
 | Map location | `farm.mapQuery`, `farm.mapLink`, `farm.mapEmbed` |
 | Products & prices | `products` |
 | Gallery photos | `gallery` |
-| Customer reviews | `testimonials` (currently marked samples) |
+| Customer reviews | Submitted on the site itself — see “Customer reviews” below |
 
 Phone: **+91 6393860760**. E-mail: **hello@kadaknathfarm.in** (still a placeholder — replace when verified).
 
@@ -31,6 +31,23 @@ Phone: **+91 6393860760**. E-mail: **hello@kadaknathfarm.in** (still a placehold
 
 It validates the fields, then opens WhatsApp with the message already written, so
 the farm receives it like any other chat message. There is no server to maintain.
+
+## Customer reviews
+
+Visitors can rate the farm and write a short review on the site itself. Reviews are
+stored in the project's Firestore database (collection `reviews`) using the web
+config in `firebase-applet-config.json`, so every visitor sees the same list and a
+new review appears as soon as it is submitted. There is no server of its own.
+
+`firestore.rules` validates every field (2–60 character name and location, 1–5
+stars, 10–500 character comment, one of the four categories) and only reviews with
+`status: "published"` are readable. To remove a review, set its `status` to
+`hidden` in the Firebase console or delete the document. The owner can also add an
+`ownerReply`, which the site shows beneath the review.
+
+If a submission cannot reach Firestore (offline, or the rules were changed), the
+review is kept in the visitor's browser instead, shown with an “On this device”
+tag, and the form offers a one-tap WhatsApp hand-off so the farm still receives it.
 
 ## Photography
 

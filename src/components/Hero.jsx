@@ -31,10 +31,10 @@ export default function Hero({ onWatch }) {
         }}
       />
 
-      <Branch className="pointer-events-none absolute -left-14 -top-6 h-56 w-auto text-forest/20 sm:h-72 lg:-left-10 lg:h-96" />
+      <Branch className="pointer-events-none absolute -left-14 -top-6 h-56 w-auto text-forest/20 [animation:branch-sway_13s_ease-in-out_infinite] sm:h-72 lg:-left-10 lg:h-96" />
       <Branch
         flip
-        className="pointer-events-none absolute -right-16 top-24 h-52 w-auto text-forest/18 sm:h-64 lg:h-80"
+        className="pointer-events-none absolute -right-16 top-24 h-52 w-auto text-forest/18 [animation:branch-sway_17s_ease-in-out_-4s_infinite] sm:h-64 lg:h-80"
       />
       <Dust count={18} className="opacity-70" />
 
@@ -166,7 +166,7 @@ export default function Hero({ onWatch }) {
             <motion.div                initial={reduce ? false : { opacity: 0, scale: 0.85, rotate: -8 }}
               animate={{ opacity: 1, scale: 1, rotate: -3 }}
               transition={{ duration: 0.9, delay: 0.85, ease }}
-              className="absolute -left-2 -top-4 z-20 w-[126px] sm:-left-7 sm:-top-7 sm:w-[150px]"
+              className="absolute -left-2 -top-4 z-20 w-[126px] [animation:badge-float_9s_ease-in-out_1.6s_infinite] sm:-left-7 sm:-top-7 sm:w-[150px]"
             >
               <div className="relative">
                 <svg viewBox="0 0 160 120" className="absolute inset-0 h-full w-full text-cream-soft drop-shadow-[0_10px_20px_rgba(60,42,16,.28)]" aria-hidden="true">

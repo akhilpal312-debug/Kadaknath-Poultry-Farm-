@@ -1,4 +1,5 @@
 import { MapPin, Phone, Mail } from 'lucide-react'
+import { Reveal } from './ui/Primitives'
 import RoosterMark from './ui/RoosterMark'
 import WhatsAppIcon from './ui/WhatsAppIcon'
 import { Facebook, Instagram, Youtube } from './ui/BrandIcons'
@@ -17,7 +18,7 @@ export default function Footer() {
       <div className="relative mx-auto max-w-[1320px] px-5 pt-14 pb-8 sm:px-8 sm:pt-16">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr_1fr] lg:gap-8">
           {/* Brand */}
-          <div>
+          <Reveal amount={0.15}>
             <a href="#home" className="flex items-center gap-3" aria-label={`${farm.name} — home`}>
               <RoosterMark className="h-11 w-auto shrink-0 text-gold-soft" />
               <span className="leading-none">
@@ -29,10 +30,11 @@ export default function Footer() {
               Pure Kadaknath chickens, chicks and eggs, raised naturally with care at our farm in Bhoshana, Shivli Road.
             </p>
             <p className="mt-4 font-serif text-[1.05rem] italic text-gold-soft/80">{farm.tagline}</p>
-          </div>
+          </Reveal>
 
           {/* Quick links */}
-          <nav aria-label="Footer navigation">
+          <Reveal delay={0.08} amount={0.15}>
+            <nav aria-label="Footer navigation">
             <h2 className="label-caps text-[0.62rem] text-gold-soft/80">Quick links</h2>
             <ul className="mt-4 space-y-2.5">
               {navLinks.map((link) => (
@@ -47,10 +49,11 @@ export default function Footer() {
                 </li>
               ))}
             </ul>
-          </nav>
+            </nav>
+          </Reveal>
 
           {/* Contact */}
-          <div>
+          <Reveal delay={0.16} amount={0.15}>
             <h2 className="label-caps text-[0.62rem] text-gold-soft/80">Get in touch</h2>
             <ul className="mt-4 space-y-3 text-[0.86rem] text-parchment/70">
               <li className="flex gap-2.5">
@@ -78,10 +81,10 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
-          </div>
+          </Reveal>
 
           {/* Social + flourish */}
-          <div>
+          <Reveal delay={0.24} amount={0.15}>
             <h2 className="label-caps text-[0.62rem] text-gold-soft/80">Follow us</h2>
             <div className="mt-4 flex gap-2.5">
               {farm.socials.map((social) => {
@@ -105,7 +108,7 @@ export default function Footer() {
               <br />
               Happy Farmers...
             </p>
-          </div>
+          </Reveal>
         </div>
 
         <div className="mt-10 flex flex-col gap-4 border-t border-cream/10 pt-6">

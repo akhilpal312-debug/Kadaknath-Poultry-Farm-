@@ -130,31 +130,6 @@ export const gallery = [
   { src: '/images/hen-head.jpg', alt: 'Front view of a Kadaknath rooster showing its comb and wattles', caption: 'Full plumage', tag: 'Roosters' },
 ]
 
-/**
- * Sample review cards. Clearly marked as samples in the UI until the owner
- * supplies verified customer feedback — no invented names or quotes.
- */
-export const testimonials = [
-  {
-    sample: true,
-    quote: 'Sample review — a verified customer’s words will appear here.',
-    author: 'Verified customer',
-    meta: 'Awaiting review',
-  },
-  {
-    sample: true,
-    quote: 'Sample review — a verified customer’s words will appear here.',
-    author: 'Verified customer',
-    meta: 'Awaiting review',
-  },
-  {
-    sample: true,
-    quote: 'Sample review — a verified customer’s words will appear here.',
-    author: 'Verified customer',
-    meta: 'Awaiting review',
-  },
-]
-
 /** Photo attribution — required by the CC BY-SA 4.0 licence. */
 export const photoCredits = {
   note:

@@ -54,7 +54,7 @@ export default function Gallery() {
                 type="button"
                 onClick={() => setIndex(i)}
                 aria-label={`Open photo: ${photo.caption}`}
-                className="group relative h-full w-full overflow-hidden rounded-[10px] border border-ink/10 bg-parchment-deep text-left"
+                className="group relative h-full w-full overflow-hidden rounded-[10px] border border-ink/10 bg-parchment-deep text-left transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(.22,1,.36,1)] hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_24px_44px_-30px_rgba(48,32,10,.65)]"
               >
                 <img
                   src={photo.src}
