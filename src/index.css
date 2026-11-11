@@ -223,6 +223,93 @@
   }
 }
 
+/* ---------- 3D scene stage ---------- */
+.scene-3d {
+  position: relative;
+  margin-inline: auto;
+  perspective: 1150px;
+  perspective-origin: 50% 42%;
+}
+
+.scene-3d__halo {
+  position: absolute;
+  inset: -8% -6% -4%;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(52% 52% at 50% 46%, rgba(213, 180, 120, 0.38), rgba(213, 180, 120, 0) 72%);
+  filter: blur(1.5px);
+}
+
+/* Soft coloured atmosphere behind the scene — heavy blur, so the object reads as lit. */
+.scene-3d__aura {
+  position: absolute;
+  inset: -16% -12% -10%;
+  pointer-events: none;
+  border-radius: 50%;
+  background:
+    radial-gradient(46% 52% at 34% 42%, rgba(30, 58, 40, 0.26), rgba(30, 58, 40, 0) 70%),
+    radial-gradient(44% 50% at 72% 62%, rgba(176, 138, 69, 0.32), rgba(176, 138, 69, 0) 72%);
+  filter: blur(42px);
+  animation: aura-breathe 11s ease-in-out infinite;
+}
+
+.scene-3d__stage {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+  /* Let the page keep scrolling vertically; sideways drags turn the scene. */
+  touch-action: pan-y;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.scene-3d__art {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: auto;
+  transform: translateZ(48px);
+  filter: drop-shadow(0 26px 26px rgba(38, 25, 8, 0.34)) drop-shadow(0 3px 3px rgba(38, 25, 8, 0.16));
+}
+
+.scene-3d__shadow {
+  position: absolute;
+  inset-inline: 6%;
+  bottom: -1%;
+  z-index: 1;
+  height: 12%;
+  border-radius: 999px;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(30, 20, 6, 0.42), rgba(30, 20, 6, 0) 72%);
+  filter: blur(12px);
+  transform: translateZ(-80px);
+}
+
+.scene-float {
+  animation: scene-float 7.5s ease-in-out infinite;
+}
+
+@keyframes aura-breathe {
+  0%,
+  100% {
+    opacity: 0.75;
+    scale: 1;
+  }
+  50% {
+    opacity: 1;
+    scale: 1.05;
+  }
+}
+
+@keyframes scene-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -10px;
+  }
+}
+
 @keyframes grain-drift {
   0% {
     transform: translate3d(0, 0, 0);
@@ -316,7 +403,9 @@
   }
 
   [class*='branch-sway'],
-  [class*='badge-float'] {
+  [class*='badge-float'],
+  .scene-float,
+  .scene-3d__aura {
     animation: none !important;
   }
 }

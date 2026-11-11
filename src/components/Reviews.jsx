@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { AlertCircle, CheckCircle2, Loader2, Quote, Star, Trash2 } from 'lucide-react'
 import { Reveal, SectionHeading, Stagger, StaggerItem } from './ui/Primitives'
+import Scene3D from './ui/Scene3D'
 import WhatsAppIcon from './ui/WhatsAppIcon'
 import { whatsappLink } from '../lib/links'
 import {
@@ -208,6 +209,10 @@ export default function Reviews() {
           title="Customer Reviews"
           subtitle="Words from people who have bought birds, chicks or eggs from us and from visitors who stopped by the farm."
         />
+
+        <div className="mt-9 flex justify-center lg:mt-10">
+          <Scene3D variant="band" />
+        </div>
 
         <div className="mt-11 grid gap-6 lg:mt-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-start lg:gap-8">
           {/* ── Reviews ── */}

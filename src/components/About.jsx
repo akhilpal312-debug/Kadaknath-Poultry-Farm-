@@ -3,6 +3,7 @@ import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } fr
 import { ArrowRight, MapPin, Feather, Sprout } from 'lucide-react'
 import { Reveal, SectionHeading, Stagger, StaggerItem } from './ui/Primitives'
 import { Branch, Sprig } from './ui/Botanical'
+import Scene3D from './ui/Scene3D'
 
 const ease = [0.22, 1, 0.36, 1]
 
@@ -23,7 +24,7 @@ export default function About() {
         style={{ background: 'radial-gradient(60% 50% at 15% 0%, rgba(255,255,252,.9), transparent 60%)' }}
       />
       <Branch
-        className="pointer-events-none absolute -right-16 top-6 h-52 w-auto rotate-12 text-forest/12 [animation:branch-sway_15s_ease-in-out_infinite] sm:h-64"
+        className="pointer-events-none absolute -right-16 top-6 h-52 w-auto rotate-12 text-forest/12 blur-[3px] [animation:branch-sway_15s_ease-in-out_infinite] sm:h-64"
         flip
       />
 
@@ -39,25 +40,29 @@ export default function About() {
           <div ref={photoTrack} className="relative mx-auto w-full max-w-[540px]">
             <Reveal y={36}>
               <motion.div style={{ y: photoY }} className="relative">
-                <div className="absolute -inset-3 rotate-[-2.2deg] rounded-[14px] bg-parchment-deep/70" />
-                <div className="absolute -inset-1.5 rotate-[1.2deg] rounded-[12px] border border-gold/25 bg-cream" />
-                <figure className="relative overflow-hidden rounded-[10px] border border-ink/10 bg-cream shadow-[0_30px_60px_-38px_rgba(48,32,10,.7)]">
-                  <img
-                    src="/images/hen.jpg"
-                    alt="A pure black Kadaknath hen standing in the farm run at Bhoshana"
-                    width="1280"
-                    height="960"
-                    loading="lazy"
-                    decoding="async"
-                    className="h-[280px] w-full object-cover sm:h-[360px] lg:h-[400px]"
-                  />
-                  <figcaption className="flex items-center justify-between gap-3 px-5 py-4">
-                    <span className="font-serif text-[0.95rem] italic text-ink-soft">Kadaknath hen · our flock</span>
-                    <span className="flex items-center gap-1.5 text-[0.68rem] tracking-wide text-clay">
-                      <Feather className="h-3.5 w-3.5" strokeWidth={1.6} /> Pure breed
-                    </span>
-                  </figcaption>
-                </figure>
+                <Scene3D
+                  variant="framed"
+                  fallback={
+                    <figure className="overflow-hidden rounded-[10px] border border-ink/10 bg-cream shadow-[0_30px_60px_-38px_rgba(48,32,10,.7)]">
+                      <img
+                        src="/images/hen.jpg"
+                        alt="A pure black Kadaknath hen standing in the farm run at Bhoshana"
+                        width="1280"
+                        height="960"
+                        loading="lazy"
+                        decoding="async"
+                        className="h-[280px] w-full object-cover sm:h-[360px] lg:h-[400px]"
+                      />
+                    </figure>
+                  }
+                />
+
+                <div className="relative mt-4 flex items-center justify-between gap-3 px-1">
+                  <span className="font-serif text-[0.95rem] italic text-ink-soft">Our farm · Bhoshana</span>
+                  <span className="flex items-center gap-1.5 text-[0.68rem] tracking-wide text-clay">
+                    <Feather className="h-3.5 w-3.5" strokeWidth={1.6} /> Pure breed
+                  </span>
+                </div>
 
                 <motion.div
                   animate={reduce ? undefined : { rotate: [-1.5, 1.5, -1.5] }}

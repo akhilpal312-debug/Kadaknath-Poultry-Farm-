@@ -3,6 +3,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { ArrowRight, Play, Leaf, ShieldCheck, Heart, Star } from 'lucide-react'
 import { Dust, Branch, Sprig } from './ui/Botanical'
 import { SplitHeading } from './ui/Primitives'
+import Scene3D from './ui/Scene3D'
 import { heroBadges } from '../data/site'
 
 const icons = { leaf: Leaf, shield: ShieldCheck, heart: Heart }
@@ -31,10 +32,10 @@ export default function Hero({ onWatch }) {
         }}
       />
 
-      <Branch className="pointer-events-none absolute -left-14 -top-6 h-56 w-auto text-forest/20 [animation:branch-sway_13s_ease-in-out_infinite] sm:h-72 lg:-left-10 lg:h-96" />
+      <Branch className="pointer-events-none absolute -left-14 -top-6 h-56 w-auto text-forest/20 blur-[2.5px] [animation:branch-sway_13s_ease-in-out_infinite] sm:h-72 lg:-left-10 lg:h-96" />
       <Branch
         flip
-        className="pointer-events-none absolute -right-16 top-24 h-52 w-auto text-forest/18 [animation:branch-sway_17s_ease-in-out_-4s_infinite] sm:h-64 lg:h-80"
+        className="pointer-events-none absolute -right-16 top-24 h-52 w-auto text-forest/18 blur-[3px] [animation:branch-sway_17s_ease-in-out_-4s_infinite] sm:h-64 lg:h-80"
       />
       <Dust count={18} className="opacity-70" />
 
@@ -126,41 +127,32 @@ export default function Hero({ onWatch }) {
 
           {/* ── Image ── */}
           <motion.div style={{ y: imageY }} className="relative mx-auto w-full max-w-[520px] lg:max-w-none">
-            <motion.div
-              initial={reduce ? false : { opacity: 0, scale: 1.04, clipPath: 'inset(14% 9% 14% 9%)' }}
-              animate={{ opacity: 1, scale: 1, clipPath: 'inset(0% 0% 0% 0%)' }}
-              transition={{ duration: 1.5, delay: 0.2, ease }}
-              className="relative"
-            >
-              <div className="absolute -inset-2.5 rounded-[26px] border border-gold/35 sm:-inset-4" />
-              <div className="absolute -inset-5 rounded-[34px] border border-gold/15 sm:-inset-7" />
-              <div className="relative overflow-hidden rounded-[22px] bg-parchment-deep shadow-[0_40px_80px_-40px_rgba(48,32,10,.75)]">
-                <img
-                  src="/images/hero-pair.jpg"
-                  alt="A Kadaknath rooster and hen standing together at the farm, with a young chick nearby"
-                  width="1280"
-                  height="1055"
-                  fetchPriority="high"
-                  decoding="async"
-                  className="h-[360px] w-full object-cover object-center sm:h-[460px] lg:h-[540px] xl:h-[580px]"
-                />
-                <div
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    background:
-                      'linear-gradient(to top, rgba(28,20,8,.42) 0%, rgba(28,20,8,0) 38%), radial-gradient(120% 80% at 50% 0%, rgba(255,246,224,.22), transparent 55%)',
-                  }}
-                />
-                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3">
-                  <p className="font-serif text-[0.78rem] italic tracking-wide text-cream/85 drop-shadow">
-                    Raised on open ground · Bhoshana
-                  </p>
-                  <span className="rounded-full border border-cream/35 bg-black/20 px-2.5 py-1 text-[0.55rem] tracking-[0.18em] text-cream/85 uppercase backdrop-blur-sm">
-                    Pure breed
-                  </span>
+            <Scene3D
+              variant="hero"
+              priority
+              fallback={
+                <div className="overflow-hidden rounded-[18px] border border-gold/30 bg-parchment-deep shadow-[0_30px_60px_-38px_rgba(48,32,10,.7)]">
+                  <img
+                    src="/images/hero-pair.jpg"
+                    alt="A Kadaknath rooster and hen standing together at the farm, with a young chick nearby"
+                    width="1280"
+                    height="1055"
+                    fetchPriority="high"
+                    decoding="async"
+                    className="h-[340px] w-full object-cover object-center sm:h-[440px] lg:h-[520px]"
+                  />
                 </div>
-              </div>
-            </motion.div>
+              }
+            />
+
+            <div className="relative z-10 mt-5 flex items-end justify-between gap-3 px-1">
+              <p className="font-serif text-[0.8rem] italic tracking-wide text-ink-soft/80">
+                Raised on open ground · Bhoshana
+              </p>
+              <span className="rounded-full border border-gold/40 bg-cream/70 px-2.5 py-1 text-[0.55rem] tracking-[0.18em] text-clay uppercase">
+                Pure breed
+              </span>
+            </div>
 
             {/* premium badge */}
             <motion.div                initial={reduce ? false : { opacity: 0, scale: 0.85, rotate: -8 }}
@@ -187,7 +179,7 @@ export default function Hero({ onWatch }) {
             </motion.div>
 
             {/* botanical accents */}
-            <Branch className="pointer-events-none absolute -bottom-10 -left-8 h-40 w-auto rotate-180 text-forest/25 sm:h-52" flip />
+            <Branch className="pointer-events-none absolute -bottom-10 -left-8 h-40 w-auto rotate-180 text-forest/25 blur-[2px] sm:h-52" flip />
             <motion.div
               animate={reduce ? undefined : { rotate: [-2, 2, -2] }}
               transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}

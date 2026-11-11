@@ -12,6 +12,9 @@
  * ─────────────────────────────────────────────────────────────
  */
 
+/** The farm's 3D scene artwork — used in the hero, about and review sections. */
+export const farmScene = '/images/farm-3d-scene.png'
+
 export const farm = {
   name: 'Kadaknath Poultry Farm',
   shortName: 'Kadaknath',

@@ -87,7 +87,7 @@ export default function Gallery() {
       <AnimatePresence>
         {open && item && (
           <motion.div
-            className="on-dark fixed inset-0 z-[80] flex items-center justify-center bg-[#120f0a]/92 p-4 backdrop-blur-sm sm:p-8"
+            className="on-dark fixed inset-0 z-[80] flex items-center justify-center bg-[#120f0a]/88 p-4 backdrop-blur-md sm:p-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

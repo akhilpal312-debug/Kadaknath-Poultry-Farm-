@@ -66,7 +66,7 @@ export default function Navbar() {
         transition={reduce ? { duration: 0 } : { duration: 0.55, ease }}
         className={`fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500 ${
           scrolled
-            ? 'bg-cream-soft/92 shadow-[0_10px_30px_-24px_rgba(60,42,16,.7)] backdrop-blur-md'
+            ? 'bg-cream-soft/85 shadow-[0_10px_30px_-24px_rgba(60,42,16,.7)] backdrop-blur-xl backdrop-saturate-150'
             : 'bg-transparent'
         }`}
       >
